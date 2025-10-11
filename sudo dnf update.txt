@@ -1,0 +1,28 @@
+sudo dnf update
+sudo dnf upgrade
+crotab-e
+sudo dnf update -y && sudo dnf upgrade -y
+cat /etc/yum.repos.d/*.repo
+dnf search bashtop
+sudo dnf install bashtop -y
+bashtop
+clear
+sudo dnf remove bashtop -y
+sudo dnf autoremove -y
+crontab -e
+touch /tmp/prueba_at.txt
+ls /tmp
+echo "rm -rf /tmp/*" | at now + 1 minute
+atq
+ls /tmp
+sudo fdisk /dev/sdb
+sudo mkfs.ext4 /dev/sdb1
+mkdir ~/Escritorio/Disco20GB
+sudo mount /dev/sdb1 ~/Escritorio/Disco20GB
+cd ~/Escritorio/Disco20GB
+touch AdrianAlcantara.txt
+ls -l
+cd ~
+sudo umount /dev/sdb1
+sudo mount /dev/sdb1 /mnt
+ls /mnt
