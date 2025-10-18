@@ -1,0 +1,73 @@
+# ===============================================
+# COMANDOS DEL DÍA (17 de Octubre de 2025)
+# ===============================================
+
+# --- 1. COMANDOS BÁSICOS DE MONITOREO (Del inicio de la conversación)
+service --status-all
+top
+ps -aux # 'ps -h' fue la opción original, pero -aux es más útil para ver todos los procesos.
+
+# --- 2. SOLUCIÓN DE ERROR 'passwd: Error de manipulación del testigo de autenticación' (En entorno de rescate)
+# 1. Salir del chroot
+exit
+# 2. Volver a montar la partición raíz con permisos de escritura (asumiendo que está en /sysroot)
+mount -o remount,rw /sysroot
+# 3. Volver a entrar al chroot
+chroot /sysroot
+# 4. Cambiar la contraseña
+passwd
+# 5. Salir del chroot y reiniciar
+exit
+reboot -f
+
+# --- 3. INSTALACIÓN DE REPOSITORIO EPEL Y CUPS-PDF (Oracle Linux)
+
+# Paso A: Limpiar y actualizar la caché de DNF (si el comando 'dnf install epel-release' falla)
+dnf clean all
+dnf makecache
+
+# Paso B: Descargar e instalar EPEL directamente (ajusta la versión 9/8 si es necesario)
+wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+dnf install epel-release-latest-9.noarch.rpm
+
+# Paso C: Instalar el paquete CUPS-PDF (después de instalar EPEL)
+dnf install cups-pdf
+
+# --- 4. INSTALACIÓN DE SSH SERVER (sshd)
+# Instalar el paquete correcto
+dnf install openssh-server
+
+# Habilitar el servicio
+systemctl enable sshd
+
+# Iniciar el servicio
+systemctl start sshd
+
+# Abrir el puerto en el firewall (si está activo)
+firewall-cmd --permanent --add-service=ssh
+firewall-cmd --reload
+
+# --- 5. GESTIÓN DE CLAVES SSH (Corregido)
+# Comando para generar una clave Ed25519 (ya lo ejecutaste)
+# ssh-keygen
+
+# Comando correcto para mostrar la clave pública en Windows:
+type C:\Users\jpain\.ssh\id_ed25519.pub
+
+# Comando para agregar la clave pública a authorized_keys en Linux (usando tu clave)
+mkdir -p ~/.ssh # Asegura que la carpeta correcta exista
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINT9e922juvz7D8N9qOvz0QKapn/mwHq+FeDzqKsChYv jpain@mamalona" >> ~/.ssh/authorized_keys
+
+# Establecer permisos correctos para SSH
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+
+# --- 6. COMANDOS PARA SUBIR ESTE ARCHIVO A GITHUB
+# 1. Crear el archivo de texto (Si lo haces manualmente, omite este paso)
+# touch comandos_del_dia.txt
+# 2. Agregar el archivo al staging area
+git add comandos_del_dia.txt
+# 3. Crear el commit
+git commit -m "Agregando resumen de comandos de la sesión de hoy"
+# 4. Subir el commit a GitHub (usa 'main' o 'master' según tu rama)
+git push origin main
