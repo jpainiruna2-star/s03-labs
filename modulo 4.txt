@@ -1,0 +1,169 @@
+    1  2025-10-25 00:12:44 exit
+    2  2025-10-25 00:12:44 scp hola.sh jeireson2@192.168.1.12:/home/usuario
+    3  2025-10-25 00:12:44 scp jeireson2@192.168.1.12:/home/usuario/hola.sh
+    4  2025-10-25 00:12:44 ssh-keygen
+    5  2025-10-25 00:12:44 exit
+    6  2025-10-25 00:12:44 ifconfig
+    7  2025-10-25 00:12:44 sudo su
+    8  2025-10-25 00:12:44 ls -l
+    9  2025-10-25 00:12:44 exit
+   10  2025-10-25 00:12:44 dnf install -y rsync openssh-server openssh-clients
+   11  2025-10-25 00:12:44 sudo su
+   12  2025-10-25 00:12:44 history
+   13  2025-10-25 00:12:44 scp ~/.ssh/id_rsa.pub root@192.168.1.9:/tmp/
+   14  2025-10-25 00:12:44 shh jeireson2@192.168.1.9
+   15  2025-10-25 00:12:44 ssh jeireson2@192.168.1.9
+   16  2025-10-25 00:12:44 ifconfig
+   17  2025-10-25 00:12:44 sudo su
+   18  2025-10-25 00:12:44 ifconfig
+   19  2025-10-25 00:12:44 cd /var/spool/cups-pdf
+   20  2025-10-25 00:12:44 ls
+   21  2025-10-25 00:12:44 cd anon
+   22  2025-10-25 00:12:44 ls
+   23  2025-10-25 00:12:44 cd ..
+   24  2025-10-25 00:12:44 sudo ls -la /var/spool/cups-pdf/anon
+   25  2025-10-25 00:12:44 sudo chmod -R 755 /var/spool/cups-pdf/anon
+   26  2025-10-25 00:12:44 /var/spool/cups-pdf$ ls -la
+   27  2025-10-25 00:12:44 jeireson2@mamalona:/var/spool/cups-pdf$ ls -la
+   28  2025-10-25 00:12:44 cd /var/spool/cups-pdf
+   29  2025-10-25 00:12:44 ls -la
+   30  2025-10-25 00:12:44 cd /var/spool/cups-pdf/SPOOL
+   31  2025-10-25 00:12:44 ls
+   32  2025-10-25 00:12:44 cd /var/spool/cups-pdf/anon
+   33  2025-10-25 00:12:44 ls
+   34  2025-10-25 00:12:44 find /var/spool/cups-pdf -name "*.pdf" -type f
+   35  2025-10-25 00:12:44 sudo cat /etc/cups/cups-pdf.conf | grep -E "(Out|AnonUser|Label)"
+   36  2025-10-25 00:12:44 cd ..
+   37  2025-10-25 00:12:44 cd /var/spool/cups-pdf
+   38  2025-10-25 00:12:44 ls
+   39  2025-10-25 00:12:44 cd anon
+   40  2025-10-25 00:12:44 ls
+   41  2025-10-25 00:12:44 cd ..
+   42  2025-10-25 00:12:44 cd %U
+   43  2025-10-25 00:12:44 sudo cd %U
+   44  2025-10-25 00:12:44 ls
+   45  2025-10-25 00:12:44 cd SPOOL
+   46  2025-10-25 00:12:44 ls
+   47  2025-10-25 00:12:44 cd ..
+   48  2025-10-25 00:12:44 cd /var/spool/cups-pdf/jeireson2
+   49  2025-10-25 00:12:44 echo "Prueba" | lp -d Cups-PDF
+   50  2025-10-25 00:12:44 ls -la /var/spool/cups-pdf/
+   51  2025-10-25 00:12:44 sudo nano /etc/cups/cups-pdf.conf
+   52  2025-10-25 00:12:44 echo "Otra prueba" | lp -d Cups-PDF
+   53  2025-10-25 00:12:44 ls -la /var/spool/cups-pdf/
+   54  2025-10-25 00:12:44 ls -la /var/spool/Cups-pdf/
+   55  2025-10-25 00:12:44 ls -la /var/spool/cups-pdf/
+   56  2025-10-25 00:12:44 cd /anon
+   57  2025-10-25 00:12:44 cd anon
+   58  2025-10-25 00:12:44 cd  /var/spool/cups-pdf/
+   59  2025-10-25 00:12:44 ls
+   60  2025-10-25 00:12:44 cd /anon
+   61  2025-10-25 00:12:44 cd anon
+   62  2025-10-25 00:12:44 ls
+   63  2025-10-25 00:12:44 cd ..
+   64  2025-10-25 00:12:44 sudo lp -d Cups-PDF-2 /dev/null
+   65  2025-10-25 00:12:44 sudo lp -d cups-pdf-2 /dev/null
+   66  2025-10-25 00:12:44 sudo lp -d http://192.168.1.18:631/printers/-2 /dev/null
+   67  2025-10-25 00:12:44 systemctl restart cups
+   68  2025-10-25 00:12:44 date
+   69  2025-10-25 00:12:44 clear
+   70  2025-10-25 00:12:44 sudo su
+   71  2025-10-25 00:12:44 vi /etc/postfix/main.cf
+   72  2025-10-25 00:12:44 vi /etc/postfix/sasl_passwd
+   73  2025-10-25 00:12:44 sudo su
+   74  2025-10-25 00:12:44 sudo su
+   75  2025-10-25 00:12:55 HISTTIMEFORMAT='%F %T ' history
+echo "Jeireson Pichardo\nMatrícula: 20240863" | mail -s "MambruSeFueALaGuerra" os3conadrian@gmail.com
+
+sendmail -t <<EOF
+To: os3conadrian@gmail.com
+Subject: MambruSeFueALaGuerra
+From: jeireson2@mamalona.localdomain
+
+Jeireson Pichardo
+Matrícula: 20240863
+EOF
+
+tail -20 /var/log/maillog
+
+firewall-cmd --add-port=80/tcp --permanent
+firewall-cmd --add-port=443/tcp --permanent
+firewall-cmd --reload
+
+firewall-cmd --get-services
+
+cat /var/www/html/index.html
+
+nano /var/www/html/index.html
+
+vim holamundo.html
+
+nano /var/www/html/index.html
+
+sudo mv holamundo.html /var/www/html/
+
+vim /etc/httpd/conf.d/mambru.conf
+
+apachectl configtest
+
+systemctl restart httpd
+
+http://192.168.1.18
+
+vim /var/www/html/index.html
+
+chmod 644 /var/www/html/index.html
+
+ls -l /var/www/html/
+
+mv /var/www/html/index.php /var/www/html/index.php.bak
+
+dnf install httpd -y
+systemctl enable httpd
+systemctl start httpd
+
+echo '<!DOCTYPE html>
+<html>
+<head><title>Hola Mundo</title></head>
+<body><h1>Hola Mundo</h1></body>
+</html>' > /var/www/html/holamundo.html
+
+vim /etc/httpd/conf.d/holamundo.conf
+
+systemctl restart httpd
+
+mkdir -p /var/www/mambru8080
+
+echo '<!DOCTYPE html>
+<html>
+<head><title>Datos del alumno</title></head>
+<body>
+<h1>Jeireson Pichardo</h1>
+<p>Matrícula: 20240863</p>
+<p>Materia: Administración de Servicios en Red</p>
+</body>
+</html>' > /var/www/mambru8080/index.html
+
+vim /etc/httpd/conf.d/mambru8080.conf
+
+apachectl configtest
+
+systemctl restart httpd
+
+:q!
+
+sudo vim /etc/httpd/conf.d/holamundo.conf
+
+sudo touch /etc/httpd/conf.d/holamundo.conf
+sudo vim /etc/httpd/conf.d/holamundo.conf
+
+ls -ld /etc/httpd/conf.d
+
+sudo nano /var/www/html/index.html
+
+mkdir -p www/var/www/mambru8080
+touch /etc/httpd/conf.d/mambru8080.conf
+mkdir -p /var/www/mambru8080
+
+http://192.168.1.18:8080
+
