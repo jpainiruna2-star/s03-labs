@@ -1,0 +1,50 @@
+# Habilitar repositorio en Oracle Linux 10
+sudo dnf install -y dnf-plugins-core
+sudo dnf config-manager --set-enabled ol10_addons
+sudo dnf clean all
+sudo dnf makecache
+
+# Instalar paquetes de cluster
+sudo dnf install -y pacemaker corosync pcs resource-agents fence-agents-all
+
+# Autenticar nodos
+pcs host auth nodo1 nodo2 -u hacluster -p Jeiden13
+
+# Crear cluster
+pcs cluster setup mi_cluster nodo1 addr=192.168.1.18 nodo2 addr=192.168.1.9
+pcs cluster start --all
+pcs cluster enable --all
+
+# Desactivar STONITH
+pcs property set stonith-enabled=false
+
+# Crear IP flotante
+pcs resource create ip_flotante ocf:heartbeat:IPaddr2 ip=192.168.1.25 cidr_netmask=24 op monitor interval=30s
+pcs resource cleanup ip_flotante
+pcs resource enable ip_flotante
+
+# Instalar Apache en ambos nodos
+sudo dnf install -y httpd
+sudo systemctl enable httpd --now
+
+# Crear páginas HTML distintas
+echo "Servidor 1" | sudo tee /var/www/html/index.html  # nodo1
+echo "Servidor 2" | sudo tee /var/www/html/index.html  # nodo2
+
+# Instalar Keepalived
+sudo dnf install -y keepalived
+
+# Activar IP forwarding
+echo "net.ipv4.ip_forward = 1" | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+
+# Abrir protocolo VRRP en firewalld
+sudo firewall-cmd --permanent --add-rich-rule='rule protocol value="vrrp" accept'
+sudo firewall-cmd --reload
+
+# Iniciar Keepalived
+sudo systemctl enable keepalived --now
+
+# Detener Keepalived para probar failover
+sudo systemctl stop keepalived
+
