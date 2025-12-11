@@ -1,0 +1,124 @@
+Comandos Laboratorios SO3 Modulo 9
+
+VIDEO 1 WEBMIN
+
+sudo nano /etc/yum.repos.d/webmin.repo
+
+[Webmin] name=Webmin Distribution Neutral baseurl=http://download.webmin.com/download/yum enabled=1 gpgcheck=1 gpgkey=http://www.webmin.com/jcameron-key.asc
+
+sudo dnf install -y webmin sudo systemctl enable webmin sudo systemctl start wembin sudo systemctl status webmin
+
+https://localhost:10000 https://127.0.0.1:10000 https://10.0.0.70:10000
+
+video 2 terraform
+
+sudo dnf config-manager --add-repo https://rpm.releases.hasicorp.com/RHEL/hasicorp.repo sudo dnf repolist
+
+sudo nano /etc/yum.repos.s/hasicorp.repo [hashicorp] name=Hashicorp Stable - $basearch baseurl=https://rpm.releases.hashicorp.com/RHEL/9/$basearch/stable enabled=1 gpgcheck=1 gpgkey=https://rpm.releases.hashicorp.com/gpg
+
+[hashicorp-test] name=Hashicorp Test - $basearch baseurl=https://rpm.releases.hashicorp.com/RHEL/9/$basearch/test enabled=0 gpgcheck=1 gpgkey=https://rpm.releases.hashicorp.com/gpg
+
+sudo dnf install terraform sudo mkdir terraform cd terraform
+
+nano main.tf terraform { required_providers {
+
+digitalocean = {
+
+  source  = "digitalocean/digitalocean"
+
+  version = "~> 2.0"
+
+}
+}
+
+}
+
+Variable para el token (para no escribirlo directo aquí por seguridad)
+variable "do_token" {}
+
+Variable para la ruta de tu llave pública
+variable "ssh_key_path" { default = "/home/efeliz/.ssh/id_rsa.pub" } provider "digitalocean" { token = var.do_token }
+
+1. Subir la llave de Ansible a DigitalOcean
+resource "digitalocean_ssh_key" "ansible_key" { name = "Ansible-Key-OracleLinux" public_key = file(var.ssh_key_path) }
+
+2. Crear el Droplet (VM) con los specs
+resource "digitalocean_droplet" "vm_servidor" { image = "ubuntu-22-04-x64" name = "OS3vm" region = "nyc1" size = "s-1vcpu-1gb"
+
+Aquí vinculamos la llave que subimos arriba
+ssh_keys = [digitalocean_ssh_key.ansible_key.fingerprint] }
+
+3. Mostrar la IP al terminar
+output "ip_address" { value = digitalocean_droplet.vm_servidor.ipv4_address }
+
+ssh-keygen -t rsa sudo terraform init sudo terraform apply
+
+Se pega el token
+ssh-copy-id root@ip_de_vm ssh root@ip_de_vm sudo terraform destroy
+
+video 3 ansible
+
+sudo dnf install -y ansible sshpass python3-pip ansible --version
+
+sudo adduser ansible sudo passwd ansible sudo usermod -aG wheel ansible sudo visudo
+
+al fondo agregar:
+
+ansible ALL=(ALL) NOPASSWD:ALL
+
+-Ubuntu: sudo adduser ansible sudo passwd ansible sudo usermod -aG sudo ansible sudo visudo
+
+al fondo agregar:
+
+ansible ALL=(ALL) NOPASSWD:ALL
+
+-Windows: net user ansible 1 /add net localgroup Administrators ansible /add
+
+su - ansible exit ssh-keygen -t rsa -b 4096 -C "ansible@controller" ssh-copy-id ansible@20.120.227.153
+
+-Windows: winrm quickconfig Enable-PSRemoting -Force Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value $true Set-Item -Path WSMan:\localhost\Service\AllowUnencrypted -Value $true
+
+New-NetFirewallRule -Name "WinRM_TCP_IN" -DisplayName "WinRM TCP Entrada" -Protocol TCP -LocalPort 5985 -Direction Inbound -Action Allow New-NetFirewallRule -Name "WinRM_UDP_IN" -DisplayName "WinRM UDP Entrada" -Protocol UDP -LocalPort 5985 -Direction Inbound -Action Allow New-NetFirewallRule -Name "WinRM_TCP_OUT" -DisplayName "WinRM TCP Salida" -Protocol TCP -LocalPort 5985 -Direction Outbound -Action Allow New-NetFirewallRule -Name "WinRM_UDP_OUT" -DisplayName "WinRM UDP Salida" -Protocol UDP -LocalPort 5985 -Direction Outbound -Action Allow
+
+nano /etc/ansible/hosts
+
+al fondo agregar
+
+[linux] ip_publica_de_maquina_en_la_nube ansible_user=ansible ansible_connection=ssh
+
+[win] ip_de_windows ansible_user=ansible ansible_password=1 ansible_connection=winrm ansible_winrm_transport=basic ansible_port=5985
+
+ansible linux -m ping -i /etc/ansible/hosts ansible win -m win_ping -i /etc/ansible/hosts
+
+video 4 commandos ad-hoc
+
+ansible win -m win_copy -a "src=C:/Users/lenovo/Desktop/archivo.txt dest=C:/Users/lenovo/Documents/archivo.txt remote_src=true"
+
+ansible win -m win_reboot -i /etc/ansible/hosts
+
+video 5 playbooks
+
+nano playbook-notepad.yml
+
+agregar adentro:
+
+name: Instalar Notepad++ en Windows hosts: win gather_facts: false tasks:
+name: Descargar instalador win_get_url: url: https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.5.8/npp.8.5.8.Installer.x64.exe dest: C:\Users\ansible\Downloads\npp_installer.exe
+
+name: Instalar Notepad++ win_package: path: C:\Users\ansible\Downloads\npp_installer.exe arguments: /S product_id: Notepad++ state: present
+
+ansible-playbook playbook-notepad.yml -i /etc/ansible/hosts
+
+nano playbook-nginx.yml
+
+agregar adentro:
+
+playbook-nginx.yml
+name: Instalar y activar NGINX en Ubuntu hosts: linux become: true tasks:
+name: Actualizar lista de paquetes apt: update_cache: yes
+
+name: Instalar NGINX apt: name: nginx state: present
+
+name: Iniciar servicio NGINX service: name: nginx state: started enabled: true
+
+ansible-playbook playbook-nginx.yml -i /etc/ansible/hosts
