@@ -1,0 +1,69 @@
+• Prática 1
+sudo -i
+dnf install httpd
+systemctl status httpd
+systemctl start httpd
+systemctl enable httpd
+nano /etc/httpd/conf/httpd.conf
+chmod -R 600 /etc/httpd/conf/httpd.conf
+sudo chcon -R -t httpd_sys_content_t /var/www/html/index.html
+sudo chown -R apache:apache /var/www/html/index.html
+nano /var/www/html/index.html
+firewall-cmd --add-port=80/tcp --permanent
+#Agrega tu plantilla html al archivo index.html#
+http://ip:puerto
+cd /usr/share/nginx
+nano index.html
+tu plantilla en el index.html o copiar la anterio
+cd /var/www/html.index.html /usr/share/nginx/index.html
+firewall-cmd --add-port=8080/tcp --permanent
+http://10.0.0.x:8080
+
+• Práctica 2
+sudo su
+dnf install postfix
+dnf install mailx
+systemctl status postfix
+systemctl start postfix
+sistemctl enable postfix
+cd /etc/postfix
+nano sasl_passwd
+[smtp.gmail.com]:587 jpainiruna2@gmail.com:(app password)
+sudo postmap /etc/postfix/sasl_passwd
+sudo chmod 600 /etc/postfix/sasl_passwd /etc/postfix/sasl_passwd.lmdb
+sudo systemctl restart postfix
+nano /etc/postfix/main.cf
+myhostname = mamalona.com
+mydomain = mamalona.com
+myorigin = $mydomain
+inet_interfaces = all
+inet_protocols = all
+mydestination = 
+relayhost = [smtp.gmail.com]:587
+smtp_use_tls = yes
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = lmdb:/etc/postfix/sasl_passwd
+smtp_sasl_security_options = noanonymous
+smtp_sasl_tls_security_options = noanonymous
+smtp_tls_CAfile = /etc/ssl/certs/ca-bundle.crt #Coemntar en caso de error
+#grep -n "error_log" /etc/postfix/main.cf #Para filtrar la busqueda#
+firewall-cmd --add-port=587/tcp --permanent
+firewall-cmd --reload
+systemctl reload postfix
+echo "Jeiren Pichardo > 20240863" | mail -s "MambruSeFueALaGuerra" os3conadrian@gmail.com
+
+• Práctica 3
+sudo su
+dnf install cups
+dnf install cups-pdf
+systemctl status cups
+nano /etc/cups/cupsd.conf
+#Listen localhost:631
+port 631
+allow from 10.0.0.167
+allow from 127.0.0.1
+firewall-cmd --add-port=631/tcp --permanent
+firewall-cmd --reload
+usermod -aG sys jeirenpichardo
+systemctl start cups
+http://10.0.0.167:631
