@@ -1,0 +1,146 @@
+Paráctica 1
+sudo mkdir prueba
+ls
+cd prueba
+Ls
+echo “HOLA SOY UN POLLITO AMARILLO!” > POLLO.txt
+cat POLLO.txt
+gpg2 --symmetric POLLO.txt
+ls 
+cat POLLO.txt.gpg
+gpg2 --output des.txt --decrypt POLLO.txt.gpg
+
+Paráctica 2
+systemctl status sshd 
+systemct status httpd
+systemctl status vsftpd
+sudo iptables -A INPUT -p tcp --dport 80 -j DROP
+sudo iptables -A INPUT -p tcp --dport 22 -j DROP
+sudo iptables -A INPUT -p tcp --dport 21 -j DROP
+sudo iptables -L -n -v --line-numbers
+sudo iptables -D INPUT 1
+sudo iptables -D INPUT 2
+sudo iptables -D INPUT 1
+sudo firewall-cmd --zone=public --remove-port=80\tcp --permanent
+sudo firewall-cmd --zone=public --remove-port=22\tcp --permanent
+sudo firewall-cmd --zone=public --remove-port=21\tcp --permanent
+sudo firewall-cmd --reload
+sudo firewall-cmd --zone=public --add-port=80\tcp --permanent
+sudo firewall-cmd --zone=public --add-port=22\tcp --permanent
+sudo firewall-cmd --zone=public --add-port=21\tcp --permanent
+sudo firewall-cmd --reload
+
+Paráctica 3
+INSTALACIÓN DE SNORT
+
+# 1. Habilitar el repositorio CRB (CodeReady Builder) para dependencias de desarrollo
+sudo dnf config-manager --set-enabled ol10_codeready_builder
+# 2. Instalar el grupo de herramientas de desarrollo y dependencias críticas
+# Incluye herramientas de compilación, libdnet, pcre2, y hwloc.
+sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm
+sudo dnf configmanager --enable epel
+sudo dnf makecache
+sudo dnf install -y @development \
+flex bison gcc gcc-c++ cmake autoconf libtool git unzip wget \
+libpcap-devel pcre2-devel libdnet-devel openssl-devel zlib-devel \
+luajit-devel libnfnetlink-devel libnetfilter_queue-devel libmnl-devel \
+xz-devel gperftools libuuid-devel hwloc-devel
+# 3. Configurar el enlazador dinámico (necesario para las librerías instaladas localmente)
+sudo sh -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf'
+sudo sh -c 'echo "/usr/local/lib64" >> /etc/ld.so.conf.d/local.conf'
+sudo ldconfig
+
+2. Instalación de libdaq (Módulo de Adquisición de Datos)
+# 1. Crear y entrar al directorio de código fuente
+mkdir ~/snort_src && cd ~/snort_src
+# 2. Clonar, configurar, compilar e instalar libdaq
+git clone https://github.com/snort3/libdaq.git
+cd libdaq/
+./bootstrap
+./configure && make && sudo make install
+sudo ldconfig
+cd ../
+
+3. Instalación de Snort 3
+# 1. Clonar Snort
+git clone https://github.com/snort3/snort3.git
+cd snort3
+# 2. Configurar el entorno (solo las rutas)
+export PKG_CONFIGa_PATH=/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig:$PKG_CONFIG_PATH
+export CFLAGS="-O3 -fno-rtti" 
+export CXXFLAGS="-O3 -fno-rtti" 
+# 3. Configurar la compilación (sin opciones de optimización -O3)
+./configure_cmake.sh --prefix=/usr/local/snort --enable-tcmalloc
+
+# 4. Compilar e instalar
+cd build/
+make -j$(nproc)
+sudo make -j$(nproc) install
+
+# 5. Finalizar la configuración del sistema
+cd ../../
+sudo ldconfig
+sudo ln -s /usr/local/snort/bin/snort /usr/bin/snort
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+# 6. Verificar la versión (Prueba de éxito)
+snort -V
+
+cd /usr/local/snort/etc/snort
+ls 
+nano snort.lua
+$HOME_NET ‘10.0.0.0/24’
+include ‘snort_defaults.lua’
+Ctrl / : 194
+###Agregar coma (,) despues de variables = default_variables###
+rules = [[
+alert icmp any any -> $HOME_NET any ( msg:"ALERTA! TRAFICO ICMP DETECTADO HACIA RED LOCAL"; sid:10000001; )
+
+alert tcp any any -> $HOME_NET 21 ( msg:"ALERTA! TRAFICO  FTP DETECTADO"; sid:10000002; )
+
+alert tcp any any -> $HOME_NET 22 ( msg:"ALERTA! TRAFICO SSH DETECTADO"; sid:10000003; )
+
+alert tcp any any -> $HOME_NET any ( msg:"ALERTA! TRAFICO HTTP DETECTADO"; sid:10000004; )
+]]
+sudo nano ~/.bashrc
+alias snort-run='sudo snort -c /usr/local/snort/etc/snort/snort.lua --daq-dir /usr/local/lib/daq --daq pcap -i ens160 -A alert_fast
+source ~/.bashrc
+
+###En OL 8###
+Práctica 4
+sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+sudo dnf install epel-release -y
+sudo dnf install google-authenticator qrencode -y
+google-authenticator
+
+sudo nano /etc/pam.d/sshd
+auth         required pam_google_authenticator.so no_strict_owner
+auth        required pam_unix.so
+auth	   substack     password-auth
+auth	   include        postlogin
+account   include        password-auth
+account   required      pam_sepermit.so
+account   required      pam_nologin.so
+account   include        password-auth
+password include       password-auth
+# pam_selinux.so close should be the first session rule
+session    required     pam_selinux.so close
+session    required     pam_loginuid.so
+# pam_selinux.so open should only be followed by sessions to be executed in the user context
+session    required     pam_selinux.so open env_params
+session    required     pam_namespace.so
+session    optional     pam_keyinit.so force revoke
+session    optional     pam_motd.so
+session    include	password-auth
+session    include	postlogin
+
+sudo nano /etc/ssh/sshd_config
+ChallengeResponseAuthentication	yes
+UsePAM	yes
+
+sudo chown mamalona:mamalona /home/jpain2/.google_authenticator
+sudo chmod 400 /home/efeliz/.google_authenticator
+revisen si les da error revisen los log 
+sudo tail /var/log/secure
+sudo setenforce 0
+sudo systemctl restart sshd
