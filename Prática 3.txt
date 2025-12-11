@@ -1,0 +1,65 @@
+Prática 3.1
+Sudo nano /etc/default/grub
+Sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+Reboot
+#Recuperar contraseña de root por grub#
+Rw 
+Init=/bin/bash
+Mount -o remount,rw /
+Passwd hola123
+Touch /.autorelabel
+Exec /sbin/init
+
+Práctica 3.2
+Sudo mkdir /home/efeliz/backups
+ls
+Nano backup.sh
+#!/bin/bash
+
+# Backup /home/efelz .tar
+Usuario=$(whoami)
+Echo “***************************”
+Echo ”Ejecutando el backup”
+Echo “***************************”
+# Estructura, tiempo ejecucion 
+for i in {5..1}
+Do 
+      echo “$i”
+done
+
+# Comando de ejecucion
+Sudo Tar -cvf “/home/${usuario}/backups/backups_%(date %d-%m-%y-%H:M%).tar” “/home/${usuario}”
+
+Echo “-------------------------------”
+Echo “Archivo copiado”
+Echo “-------------------------------”
+
+Cd /home/${usuario}/backups/
+Ls
+Chmod +x backup.sh
+./backup.sh
+./ifconfig.sh
+
+#Script para copia de ifconfig#
+ #!/bin/bash
+
+# Copia de conf red
+Echo “Ingrese el nombre con el que  se va a guardar el archivo (sin extensiones) ”
+Read nombre
+Ifconfig > $nombre.txt
+
+Chmod +x ifconfig.sh
+./ifconfig.sh
+Ls
+Cat red.txt
+Práctica 3.3
+Ip a
+Sudo dnf install openssh -y
+Sudo systemctl status ssd
+Sudo systemctl satart sshd && sudo systemctl enable sshd
+Ssh usuario@(ip)
+exit
+Ssh-keygen
+Ssh-copy-id user@ip-server
+
+Ssh usuario@ip-server
